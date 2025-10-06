@@ -21,5 +21,5 @@ from sme_credit import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('',views)
+    path('',views.predict_credit_score, name='predict')
 ]

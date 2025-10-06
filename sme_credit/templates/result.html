@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+    <style>
+        body { font-family: Arial; background: #f2f4f8; text-align: center; padding-top: 60px; }
+        .box { background: white; margin: auto; width: 400px; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+        h2 { color: #007bff; }
+        p { font-size: 18px; }
+        a { display: inline-block; margin-top: 20px; text-decoration: none; color: white; background: #007bff; padding: 10px 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Credit Assessment Result</h2>
+    <p><strong>Predicted Risk:</strong> {{ predicted_risk }}%</p>
+    <p><strong>Estimated Credit Score:</strong> {{ credit_score }}%</p>
+    <a href="/">Back to Form</a>
+</div>
+</body>
+</html>

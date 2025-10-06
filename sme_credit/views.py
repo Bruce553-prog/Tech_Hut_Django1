@@ -6,8 +6,8 @@ import joblib
 import numpy as np
 import pandas as pd
 
-model = joblib.load("credit_risk_pipeline.pkl")
-model_features = joblib.load("model_features.pkl")
+model = joblib.load("credit_risk_pipeline.joblib")
+model_features = joblib.load("model_features.joblib")
 
 
 def predict_credit_score(request):
