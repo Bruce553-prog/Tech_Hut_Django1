@@ -29,35 +29,4 @@
     <a href="/">Go Back</a>
 </body>
 </html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Credit Risk Prediction Result</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        .high-risk {
-            color: red;
-            font-weight: bold;
-        }
-        .low-risk {
-            color: green;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <h1>Credit Risk Assessment Result</h1>
-    {% if "High Risk" in prediction %}
-        <h2 class="high-risk">{{ prediction }}</h2>
-    {% else %}
-        <h2 class="low-risk">{{ prediction }}</h2>
-    {% endif %}
-    <p>Default Probability: <strong>{{ probability }}%</strong></p>
-    <a href="/">Go Back</a>
-</body>
-</html>
 
