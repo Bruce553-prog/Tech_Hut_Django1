@@ -6,8 +6,8 @@ import joblib
 import numpy as np
 import pandas as pd
 
-model = joblib.load("credit_risk_pipeline.joblib")
-model_features = joblib.load("model_features.joblib")
+model = joblib.load("credit_risk_pipeline.pkl")
+model_features = joblib.load("model_features.pkl")
 
 
 def predict_credit_score(request):
@@ -15,31 +15,42 @@ def predict_credit_score(request):
         form = PredictionForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            df = pd.DataFrame([data])
 
-            # One-hot encode like during training
-            df_encoded = pd.get_dummies(df)
-            missing_cols = set(model_features) - set(df_encoded.columns)
-            for col in missing_cols:
-                df_encoded[col] = 0
-            df_encoded = df_encoded[model_features]
+           
+            data['Business_Type'] = str(data['Business_Type'])
+            data['Region'] = str(data['Region'])
+            data['Economic_Sector'] = str(data['Economic_Sector'])
 
-            prediction = model.predict_proba(df_encoded)[0][1]
-            predicted_risk = prediction * 100
-            credit_score = 100 - predicted_risk  # Simplified logic
+            numeric_fields = [
+                'Age', 'Years_in_Business', 'Annual_Income', 'Loan_Amount',
+                'Outstanding_Debt', 'Credit_Utilization_Rate',
+                'Number_of_Past_Loans', 'Past_Defaults', 'Payment_History_Score',
+                'Collateral_Value'
+            ]
+            for field in numeric_fields:
+                data[field] = float(data[field])
 
-            CreditPrediction.objects.create(
-                **data,
-                predicted_risk=predicted_risk,
-                credit_score=credit_score
-            )
+         
+            import pandas as pd
+            df_input = pd.DataFrame([data])
 
-            context = {
-                'form': form,
-                'predicted_risk': f"{predicted_risk:.2f}",
-                'credit_score': f"{credit_score:.2f}"
-            }
-            return render(request, 'result.html', context)
+        
+
+            # Make prediction
+            prediction = model.predict(df_input)[0]
+            prob = model.predict_proba(df_input)[0][1] * 100  # percentage
+
+             # Interpret prediction
+            if prediction == 1:
+                result = "High Risk (Likely to Default)"
+            else:
+                result = "Low Risk (Likely to Repay)"
+
+            return render(request, 'result.html', {
+                'prediction': result,
+                'probability': round(prob, 2),
+            })
+
     else:
         form = PredictionForm()
 
