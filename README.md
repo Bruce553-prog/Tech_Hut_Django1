@@ -68,7 +68,7 @@ Define and adjust your own risk thresholds to align with internal lending polici
 | **Database** | SQLite|
 
 ## ⚙️Model links
-> Resave below files with .joblib file extension instead of .pkl
+
 - [credit_risk_pipeline.pkl](https://drive.google.com/file/d/1o10IQGRdvI-07xLKFn27KEd2LAVY5-Sd/view?usp=sharing)
 - [model_features.pkl](https://drive.google.com/file/d/1X8_LbEbf69CmPYPDyXorGGO5dYcgVTyw/view?usp=sharing)
 ---
