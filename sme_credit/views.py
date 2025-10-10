@@ -141,9 +141,11 @@ def borrower_form_view(request):
                 Region=data['Region'],
                 Economic_Sector=data['Economic_Sector']
             )
+            
             return render(request, 'borrower_success.html')
     else:
         form = BorrowerForm()
+        
 
     return render(request, 'borrower_form.html', {'form': form})
 
