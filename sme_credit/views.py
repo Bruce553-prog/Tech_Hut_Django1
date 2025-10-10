@@ -1,15 +1,75 @@
-from django.shortcuts import render
-
+from django.shortcuts import render,redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate, logout
 from .forms import PredictionForm
 from .models import CreditPrediction
+from .models import BorrowerApplication
+from django.contrib import messages
+from . borrowerform import BorrowerForm
+from django.contrib.auth.decorators import login_required
+
+
 import joblib
 import numpy as np
 import pandas as pd
 
-model = joblib.load("credit_risk_pipeline.pkl")
-model_features = joblib.load("model_features.pkl")
+model = joblib.load("credit_risk_pipeline.joblib")
+model_features = joblib.load("credit_risk_pipeline.joblib")
 
 
+
+def home_view(request):
+    if request.user.is_authenticated:
+        return redirect('borrower_form')  # or borrower form, if that’s their dashboard
+    return render(request, 'home.html')
+
+
+def signup_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            messages.error(request, "Passwords do not match.")
+            return redirect('signup')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return redirect('signup')
+
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        user.save()
+
+        login(request, user)
+        messages.success(request, f"Welcome {username}, your account has been created!")
+        return redirect('predict')
+
+    return render(request, 'signup.html')
+
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, f"Welcome {username}!")
+            return redirect('predict')  # redirect to a dashboard page
+        else:
+            messages.error(request, "Invalid username or password")
+            return redirect('login')
+
+    return render(request, 'login.html')
+
+
+
+@login_required
 def predict_credit_score(request):
     if request.method == 'POST':
         form = PredictionForm(request.POST)
@@ -58,4 +118,38 @@ def predict_credit_score(request):
 
 
 
+
+
+@login_required
+def borrower_form_view(request):
+    if request.method == 'POST':
+        form = BorrowerForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            BorrowerApplication.objects.create(
+                Age=data['Age'],
+                Years_in_Business=data['Years_in_Business'],
+                Annual_Income=data['Annual_Income'],
+                Loan_Amount=data['Loan_Amount'],
+                Outstanding_Debt=data['Outstanding_Debt'],
+                Credit_Utilization_Rate=data['Credit_Utilization_Rate'],
+                Number_of_Past_Loans=data['Number_of_Past_Loans'],
+                Past_Defaults=data['Past_Defaults'],
+                Payment_History_Score=data['Payment_History_Score'],
+                Collateral_Value=data['Collateral_Value'],
+                Business_Type=data['Business_Type'],
+                Region=data['Region'],
+                Economic_Sector=data['Economic_Sector']
+            )
+            return render(request, 'borrower_success.html')
+    else:
+        form = BorrowerForm()
+
+    return render(request, 'borrower_form.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have been logged out successfully.")
+    return redirect('login')
 
