@@ -1,1 +1,5 @@
 *.pkl
+venv
+credit_score/__pycache__/
+sme_credit/__pycache__/
+
