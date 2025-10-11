@@ -72,6 +72,7 @@ Define and adjust your own risk thresholds to align with internal lending polici
 - [credit_risk_pipeline.pkl](https://drive.google.com/file/d/1o10IQGRdvI-07xLKFn27KEd2LAVY5-Sd/view?usp=sharing)
 - [model_features.pkl](https://drive.google.com/file/d/1X8_LbEbf69CmPYPDyXorGGO5dYcgVTyw/view?usp=sharing)
 ---
+Requires Python versions 3.9 to 3.13
 
 
 
