@@ -181,5 +181,18 @@
             Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
         </p>
     </div>
+
+    <script>
+        // Wait a few seconds, then fade and remove the messages
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => {
+                msg.style.transition = 'opacity 0.6s ease';
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 600); // remove after fade-out
+            });
+        }, 3000); // 3 seconds before fading
+    </script>
+
 </body>
 </html>

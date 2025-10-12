@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Risk Prediction</title>
+    <title>Credit Risk Assessment</title>
     <style>
         * {
             margin: 0;
@@ -22,6 +22,7 @@
         }
 
         .container {
+            position: relative;
             background: white;
             padding: 40px;
             border-radius: 20px;
@@ -61,6 +62,48 @@
             position: relative;
         }
 
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .form-input:hover {
+            border-color: #c0c0c0;
+        }
+
+        /* For select elements specifically */
+        .form-input select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        /* For number inputs */
+        .form-input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .form-input[type="number"]::-webkit-outer-spin-button,
+        .form-input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .field-header {
             display: flex;
             align-items: center;
@@ -79,7 +122,7 @@
             display: inline-block;
             width: 18px;
             height: 18px;
-            background-color: #667eea;
+            background-color: #00000028;
             color: white;
             border-radius: 50%;
             text-align: center;
@@ -123,6 +166,7 @@
         .info-icon:hover .tooltip {
             visibility: visible;
             opacity: 1;
+            border-color: #5b5b5bff;
         }
 
         .input-with-unit {
@@ -153,6 +197,27 @@
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
+
+        .back-btn {
+            display: inline-block;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
 
         button {
             width: 100%;
@@ -192,143 +257,187 @@
 </head>
 <body>
     <div class="container">
+        <a href="/dashboard" class="back-btn">← Back</a>
         <h2>Credit Risk Assessment</h2>
         <p class="subtitle">Enter the applicant's information</p>
         
         <form method="post">
             {% csrf_token %}
             
-            <!-- Example fields with units and tooltips -->
+            <!-- Personal Information -->
             <div class="form-group">
                 <div class="field-header">
-                    <label for="annual_income">Annual Income</label>
+                    <label for="Age">Age</label>
                     <div class="info-icon">?
-                        <div class="tooltip">The applicant's total yearly income before taxes</div>
+                        <div class="tooltip">Applicant's current age in years (18-100)</div>
                     </div>
                 </div>
                 <div class="input-with-unit">
-                    <input type="number" id="annual_income" name="annual_income" required min="0" step="1000">
-                    <span class="unit">KSh</span>
+                    <input type="number" id="Age" name="Age" required min="18" max="100">
+                    <span class="unit">Years</span>
+                </div>
+            </div>
+            
+            <!-- Business Information -->
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Years_in_Business">Years in Business</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Number of years the applicant has been in business</div>
+                    </div>
+                </div>
+                <div class="input-with-unit">
+                    <input type="number" id="Years_in_Business" name="Years_in_Business" required min="0">
+                    <span class="unit">Years</span>
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="field-header">
-                    <label for="loan_amount">Loan Amount Requested</label>
+                    <label for="Business_Type">Business Type</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Type of business the applicant operates</div>
+                    </div>
+                </div>
+                <select id="Business_Type" name="Business_Type" required class="form-input">
+                    <option value="">Select business type</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Agriculture">Agriculture</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Services">Services</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Region">Region</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Region where the business operates</div>
+                    </div>
+                </div>
+                <select id="Region" name="Region" required class="form-input">
+                    <option value="">Select region</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Uganda">Uganda</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Economic_Sector">Economic Sector</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Primary economic sector of the business</div>
+                    </div>
+                </div>
+                <select id="Economic_Sector" name="Economic_Sector" required class="form-input">
+                    <option value="">Select economic sector</option>
+                    <option value="SME">SME</option>
+                    <option value="Corporate">Corporate</option>
+                    <option value="Individual">Individual</option>
+                </select>
+            </div>
+            
+            <!-- Financial Information -->
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Annual_Income">Annual Income</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Applicant's total yearly income</div>
+                    </div>
+                </div>
+                <div class="input-with-unit">
+                    <input type="number" id="Annual_Income" name="Annual_Income" required min="0" step="0.01">
+                    <span class="unit">Currency</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Loan_Amount">Loan Amount</label>
                     <div class="info-icon">?
                         <div class="tooltip">The total amount the applicant is requesting to borrow</div>
                     </div>
                 </div>
                 <div class="input-with-unit">
-                    <input type="number" id="loan_amount" name="loan_amount" required min="0" step="1000">
-                    <span class="unit">KSh</span>
+                    <input type="number" id="Loan_Amount" name="Loan_Amount" required min="0" step="0.01">
+                    <span class="unit">Currency</span>
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="field-header">
-                    <label for="loan_term">Loan Term</label>
+                    <label for="Outstanding_Debt">Outstanding Debt</label>
                     <div class="info-icon">?
-                        <div class="tooltip">The duration over which the loan will be repaid</div>
+                        <div class="tooltip">Total amount of current outstanding debts</div>
                     </div>
                 </div>
                 <div class="input-with-unit">
-                    <input type="number" id="loan_term" name="loan_term" required min="1" max="30">
-                    <span class="unit">Years</span>
+                    <input type="number" id="Outstanding_Debt" name="Outstanding_Debt" required min="0" step="0.01">
+                    <span class="unit">Currency</span>
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="field-header">
-                    <label for="interest_rate">Interest Rate</label>
+                    <label for="Credit_Utilization_Rate">Credit Utilization Rate</label>
                     <div class="info-icon">?
-                        <div class="tooltip">The annual interest rate for the loan</div>
+                        <div class="tooltip">Percentage of available credit currently being used (0-1)</div>
                     </div>
                 </div>
                 <div class="input-with-unit">
-                    <input type="number" id="interest_rate" name="interest_rate" required min="0" max="100" step="0.1">
-                    <span class="unit">%</span>
+                    <input type="number" id="Credit_Utilization_Rate" name="Credit_Utilization_Rate" required min="0" max="1" step="0.01">
+                    <span class="unit">Ratio</span>
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="field-header">
-                    <label for="debt_to_income">Debt-to-Income Ratio</label>
+                    <label for="Number_of_Past_Loans">Number of Past Loans</label>
                     <div class="info-icon">?
-                        <div class="tooltip">Monthly debt payments divided by gross monthly income</div>
+                        <div class="tooltip">Total number of loans the applicant has had in the past</div>
+                    </div>
+                </div>
+                <input type="number" id="Number_of_Past_Loans" name="Number_of_Past_Loans" required min="0" class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Past_Defaults">Past Defaults</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Number of times the applicant has defaulted on loans</div>
+                    </div>
+                </div>
+                <input type="number" id="Past_Defaults" name="Past_Defaults" required min="0" class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <div class="field-header">
+                    <label for="Payment_History_Score">Payment History Score</label>
+                    <div class="info-icon">?
+                        <div class="tooltip">Applicant's payment history score (0-1000)</div>
                     </div>
                 </div>
                 <div class="input-with-unit">
-                    <input type="number" id="debt_to_income" name="debt_to_income" required min="0" max="100" step="0.1">
-                    <span class="unit">%</span>
+                    <input type="number" id="Payment_History_Score" name="Payment_History_Score" required min="0" max="1000" step="0.01">
+                    <span class="unit">Points</span>
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="field-header">
-                    <label for="employment_length">Employment Length</label>
+                    <label for="Collateral_Value">Collateral Value</label>
                     <div class="info-icon">?
-                        <div class="tooltip">How long the applicant has been with their current employer</div>
+                        <div class="tooltip">Estimated value of collateral the applicant can provide</div>
                     </div>
                 </div>
                 <div class="input-with-unit">
-                    <input type="number" id="employment_length" name="employment_length" required min="0" step="0.5">
-                    <span class="unit">Years</span>
+                    <input type="number" id="Collateral_Value" name="Collateral_Value" required min="0" step="0.01">
+                    <span class="unit">Currency</span>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <div class="field-header">
-                    <label for="credit_score">Credit Score</label>
-                    <div class="info-icon">?
-                        <div class="tooltip">The applicant's credit score (typically 300-850)</div>
-                    </div>
-                </div>
-                <input type="number" id="credit_score" name="credit_score" required min="300" max="850">
-            </div>
-            
-            <div class="form-group">
-                <div class="field-header">
-                    <label for="home_ownership">Home Ownership</label>
-                    <div class="info-icon">?
-                        <div class="tooltip">The applicant's housing situation</div>
-                    </div>
-                </div>
-                <select id="home_ownership" name="home_ownership" required>
-                    <option value="">Select an option</option>
-                    <option value="RENT">Rent</option>
-                    <option value="MORTGAGE">Mortgage</option>
-                    <option value="OWN">Own</option>
-                    <option value="OTHER">Other</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <div class="field-header">
-                    <label for="loan_intent">Loan Purpose</label>
-                    <div class="info-icon">?
-                        <div class="tooltip">The intended use of the loan funds</div>
-                    </div>
-                </div>
-                <select id="loan_intent" name="loan_intent" required>
-                    <option value="">Select an option</option>
-                    <option value="PERSONAL">Personal</option>
-                    <option value="EDUCATION">Education</option>
-                    <option value="MEDICAL">Medical</option>
-                    <option value="VENTURE">Business Venture</option>
-                    <option value="HOMEIMPROVEMENT">Home Improvement</option>
-                    <option value="DEBTCONSOLIDATION">Debt Consolidation</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <div class="field-header">
-                    <label for="previous_defaults">Previous Defaults</label>
-                    <div class="info-icon">?
-                        <div class="tooltip">Number of previous loan or credit defaults</div>
-                    </div>
-                </div>
-                <input type="number" id="previous_defaults" name="previous_defaults" required min="0" max="10">
             </div>
             
             <button type="submit">Predict Risk</button>

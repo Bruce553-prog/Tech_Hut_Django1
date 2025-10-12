@@ -22,10 +22,13 @@ from sme_credit import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', views.home_view, name='home'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
     path('borrower/',views.borrower_form_view, name='borrower_form'),
     path('predict/',views.predict_credit_score, name='predict'),
+    path('logout/', views.logout_view, name='logout'),
+
     
 
     

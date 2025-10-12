@@ -27,7 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             text-align: center;
             animation: slideIn 0.5s ease-out;
         }
@@ -49,10 +49,18 @@
             font-size: 32px;
         }
 
+        h3 {
+            color: #444;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
         p {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 17px;
+            line-height: 1.6;
         }
 
         .home-options {
@@ -86,6 +94,10 @@
             h2 {
                 font-size: 28px;
             }
+
+            h3 {
+                font-size: 20px;
+            }
             
             .home-options {
                 flex-direction: column;
@@ -97,7 +109,22 @@
 <body>
     <div class="container">
         <h2>Welcome to the Credit Risk Management System</h2>
-        <p>Please choose an option:</p>
+        <p>Manage, analyze, and assess credit risks effectively with our intuitive and data-driven platform.</p>
+
+        <h3>What is Credit Risk Management?</h3>
+        <p>
+            Credit risk management involves evaluating the likelihood that a borrower or counterparty will default on financial obligations. 
+            It helps financial institutions, businesses, and analysts make informed lending decisions by assessing factors such as credit history, 
+            repayment capacity, and exposure to financial risk.
+        </p>
+
+        <h3>Who Is It For?</h3>
+        <p>
+            This system is designed for banks, microfinance institutions, credit officers, and data analysts who need reliable tools 
+            to monitor borrower performance, predict default risk, and ensure compliance with regulatory standards.
+        </p>
+
+        <p>Ready to get started? Choose an option below:</p>
         <div class="home-options">
             <a href="{% url 'signup' %}">Sign Up</a>
             <a href="{% url 'login' %}">Log In</a>

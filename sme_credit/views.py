@@ -20,7 +20,7 @@ model_features = joblib.load("credit_risk_pipeline.joblib")
 
 def home_view(request):
     if request.user.is_authenticated:
-        return redirect('borrower_form')  # or borrower form, if that’s their dashboard
+        return redirect('dashboard')  # or borrower form, if that’s their dashboard
     return render(request, 'home.html')
 
 
@@ -44,7 +44,7 @@ def signup_view(request):
 
         login(request, user)
         messages.success(request, f"Welcome {username}, your account has been created!")
-        return redirect('predict')
+        return redirect('dashboard')
 
     return render(request, 'signup.html')
 
@@ -60,14 +60,16 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f"Welcome {username}!")
-            return redirect('predict')  # redirect to a dashboard page
+            return redirect('dashboard')  # redirect to a dashboard page
         else:
             messages.error(request, "Invalid username or password")
             return redirect('login')
 
     return render(request, 'login.html')
 
-
+@login_required
+def dashboard_view(request):
+    return render(request, 'dashboard.html')
 
 @login_required
 def predict_credit_score(request):
